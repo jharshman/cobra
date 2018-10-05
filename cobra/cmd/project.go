@@ -18,14 +18,10 @@ type Project struct {
 
 // NewProject returns Project with specified project name.
 func NewProject(projectName string) *Project {
-	if projectName == "" {
-		er("can't create project with blank name")
-	}
-
 	p := new(Project)
 	p.name = projectName
 
-	// 1. Find already created protect.
+	// 1. Find already created project.
 	p.absPath = findPackage(projectName)
 
 	// 2. If there are no created project with this path, and user is in GOPATH,
@@ -46,7 +42,7 @@ func NewProject(projectName string) *Project {
 
 	// 3. If user is not in GOPATH, then use (first GOPATH)/src/projectName.
 	if p.absPath == "" {
-		p.absPath = filepath.Join(srcPaths[0], projectName)
+		p.absPath = projectName
 	}
 
 	return p

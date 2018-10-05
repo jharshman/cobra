@@ -49,13 +49,14 @@ Example: cobra add server -> resulting in a new cmd/server.go`,
 
 		var project *Project
 		if packageName != "" {
-			project = NewProject(packageName)
-		} else {
-			wd, err := os.Getwd()
-			if err != nil {
-				er(err)
-			}
-			project = NewProjectFromPath(wd)
+			fmt.Println("warning, use of -t/--package deprecated")
+		}
+		wd, err := os.Getwd()
+		if err != nil {
+			er(err)
+		}
+		project = &Project{
+			absPath: wd,
 		}
 
 		cmdName := validateCmdName(args[0])
