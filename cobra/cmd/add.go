@@ -47,15 +47,14 @@ Example: cobra add server -> resulting in a new cmd/server.go`,
 			er("add needs a name for the command")
 		}
 
-		var project *Project
 		if packageName != "" {
-			fmt.Println("warning, use of -t/--package deprecated")
+			fmt.Println("use of -t/--package deprecated")
 		}
 		wd, err := os.Getwd()
 		if err != nil {
 			er(err)
 		}
-		project = &Project{
+		project := &Project{
 			absPath: wd,
 		}
 
