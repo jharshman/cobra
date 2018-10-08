@@ -66,41 +66,41 @@ func findPackage(packageName string) string {
 
 // NewProjectFromPath returns Project with specified absolute path to
 // package.
-func NewProjectFromPath(absPath string) *Project {
-	if absPath == "" {
-		er("can't create project: absPath can't be blank")
-	}
-	if !filepath.IsAbs(absPath) {
-		er("can't create project: absPath is not absolute")
-	}
-
-	// If absPath is symlink, use its destination.
-	fi, err := os.Lstat(absPath)
-	if err != nil {
-		er("can't read path info: " + err.Error())
-	}
-	if fi.Mode()&os.ModeSymlink != 0 {
-		path, err := os.Readlink(absPath)
-		if err != nil {
-			er("can't read the destination of symlink: " + err.Error())
-		}
-		absPath = path
-	}
-
-	p := new(Project)
-	p.absPath = strings.TrimSuffix(absPath, findCmdDir(absPath))
-	p.name = filepath.ToSlash(trimSrcPath(p.absPath, p.SrcPath()))
-	return p
-}
+//func NewProjectFromPath(absPath string) *Project {
+//	if absPath == "" {
+//		er("can't create project: absPath can't be blank")
+//	}
+//	if !filepath.IsAbs(absPath) {
+//		er("can't create project: absPath is not absolute")
+//	}
+//
+//	// If absPath is symlink, use its destination.
+//	fi, err := os.Lstat(absPath)
+//	if err != nil {
+//		er("can't read path info: " + err.Error())
+//	}
+//	if fi.Mode()&os.ModeSymlink != 0 {
+//		path, err := os.Readlink(absPath)
+//		if err != nil {
+//			er("can't read the destination of symlink: " + err.Error())
+//		}
+//		absPath = path
+//	}
+//
+//	p := new(Project)
+//	p.absPath = strings.TrimSuffix(absPath, findCmdDir(absPath))
+//	p.name = filepath.ToSlash(trimSrcPath(p.absPath, p.SrcPath()))
+//	return p
+//}
 
 // trimSrcPath trims at the beginning of absPath the srcPath.
-func trimSrcPath(absPath, srcPath string) string {
-	relPath, err := filepath.Rel(srcPath, absPath)
-	if err != nil {
-		er(err)
-	}
-	return relPath
-}
+//func trimSrcPath(absPath, srcPath string) string {
+//	relPath, err := filepath.Rel(srcPath, absPath)
+//	if err != nil {
+//		er(err)
+//	}
+//	return relPath
+//}
 
 // License returns the License object of project.
 func (p *Project) License() License {

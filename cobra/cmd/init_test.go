@@ -10,6 +10,18 @@ import (
 	"github.com/spf13/viper"
 )
 
+func TestInitCmd(t *testing.T) {
+	defer os.RemoveAll("myproject")
+	rootCmd.SetArgs([]string{"init", "myproject"})
+	if err := rootCmd.Execute(); err != nil {
+		t.Fatalf("Error during execution: %v", err)
+	}
+
+	// check stuff
+	expectedFiles := []string{".", "cmd", "LICENSE", "main.go", "cmd/root.go"}
+
+}
+
 // TestGoldenInitCmd initializes the project "github.com/spf13/testproject"
 // in GOPATH and compares the content of files in initialized project with
 // appropriate golden files ("testdata/*.golden").
