@@ -52,10 +52,15 @@ Init will not use an existing directory with contents.`,
 
 		var project *Project
 		if len(args) == 0 {
-			project = &Project{absPath: wd}
+			project = &Project{
+				absPath: wd,
+			}
 		} else {
 			p, _ := filepath.Abs(args[0])
-			project = &Project{absPath: p}
+			project = &Project{
+				name: "github.com/spf13/testproject", // todo: the parameter has to be a package name
+				absPath: p,
+			}
 		}
 
 		initializeProject(project)

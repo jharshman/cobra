@@ -1,24 +1,55 @@
 package cmd
 
 import (
-	"errors"
-	"io/ioutil"
+	"crypto/md5"
+	"encoding/hex"
+	"io"
 	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/spf13/viper"
 )
 
 func TestInitCmd(t *testing.T) {
-	defer os.RemoveAll("myproject")
-	rootCmd.SetArgs([]string{"init", "myproject"})
+	viper.Set("license", "apache")
+	viper.Set("year", 2017)
+
+	defer os.RemoveAll("testproject")
+	rootCmd.SetArgs([]string{"init", "testproject"})
 	if err := rootCmd.Execute(); err != nil {
 		t.Fatalf("Error during execution: %v", err)
 	}
 
-	// check stuff
-	expectedFiles := []string{".", "cmd", "LICENSE", "main.go", "cmd/root.go"}
+	tests := []struct {
+		name string
+		expected string
+	}{
+		{"testproject/cmd/root.go", "8b0f6cbb314ae60c44e6155323f76ea3"},
+		{"testproject/main.go", "cd6be5e8173223447b0b6e7d0e351f19"},
+	}
+
+	for _, v := range tests {
+		// get md5sum from generated file
+		file, err := os.Open(v.name)
+		if err != nil {
+			t.Fatalf("could not open file for reading: %v", err)
+		}
+
+		hash := md5.New()
+
+		if _, err := io.Copy(hash, file); err != nil {
+			t.Fatalf("could not copy file into hash interface: %v", err)
+		}
+
+		hashBytes := hash.Sum(nil)
+		sum := hex.EncodeToString(hashBytes)
+
+		if sum != v.expected {
+			t.Errorf("md5 sums not equal\nhave: %s got: %s\n", v.expected, sum)
+		}
+
+		file.Close()
+	}
 
 }
 
@@ -26,6 +57,7 @@ func TestInitCmd(t *testing.T) {
 // in GOPATH and compares the content of files in initialized project with
 // appropriate golden files ("testdata/*.golden").
 // Use -update to update existing golden files.
+/*
 func TestGoldenInitCmd(t *testing.T) {
 	projectName := "github.com/spf13/testproject"
 	project := NewProject(projectName)
@@ -93,3 +125,4 @@ func TestGoldenInitCmd(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+*/
