@@ -56,10 +56,11 @@ Init will not use an existing directory with contents.`,
 				absPath: wd,
 			}
 		} else {
-			p, _ := filepath.Abs(args[0])
+			_, p := filepath.Split(args[0])
+			abs, _ := filepath.Abs(p)
 			project = &Project{
-				name: "github.com/spf13/testproject", // todo: the parameter has to be a package name
-				absPath: p,
+				name: args[0],
+				absPath: abs,
 			}
 		}
 

@@ -15,7 +15,7 @@ func TestInitCmd(t *testing.T) {
 	viper.Set("year", 2017)
 
 	defer os.RemoveAll("testproject")
-	rootCmd.SetArgs([]string{"init", "testproject"})
+	rootCmd.SetArgs([]string{"init", "github.com/spf13/testproject"})
 	if err := rootCmd.Execute(); err != nil {
 		t.Fatalf("Error during execution: %v", err)
 	}
