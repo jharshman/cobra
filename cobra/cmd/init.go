@@ -30,12 +30,9 @@ var initCmd = &cobra.Command{
 	Long: `Initialize (cobra init) will create a new application, with a license
 and the appropriate structure for a Cobra-based CLI application.
 
-  * If a name is provided, it will be created in the current directory;
-  * If no name is provided, the current directory will be assumed;
-  * If a relative path is provided, it will be created inside $GOPATH
-    (e.g. github.com/spf13/hugo);
-  * If an absolute path is provided, it will be created;
-  * If the directory already exists but is empty, it will be used.
+	* If no name is provided, assumes you are in a project dir inside the GOPATH.
+  * If a name is provided, assumes you are outside of the GOPATH and the name must be a package name.
+		(e.g: github.com/spf13/hugo)
 
 Init will not use an existing directory with contents.`,
 
@@ -52,15 +49,17 @@ Init will not use an existing directory with contents.`,
 
 		var project *Project
 		if len(args) == 0 {
+			// todo: ensure within GOPATH and setup project accordingly
 			project = &Project{
 				absPath: wd,
 			}
 		} else {
+			// todo: call cobra with package name from within an already created directory
 			_, p := filepath.Split(args[0])
-			abs, _ := filepath.Abs(p)
+			abs, _ := filepath.Abs(p) // get absolute path from project name
 			project = &Project{
-				name: args[0],
-				absPath: abs,
+				name: args[0], // todo: this needs to be the package name of the desired project ( github.com/spf13/hugo)
+				absPath: abs, // todo: this needs to be the absolute path to the project ($HOME/Projects/hugo) ** can be outside of GOPATH
 			}
 		}
 
