@@ -63,6 +63,12 @@ Init will not use an existing directory with contents.`,
 			}
 		}
 
+		// NOTE:
+		// might be better to do a setup where the behavior is driven by whether or not we are actually in the GOPATH.
+		// always require a package name and if in gopath setup the project indicated by the package name
+		// if not in gopath, package name is still required and setup the project as indicated by the package name.
+		// if the package name is always required, this simplifies things greatly.
+
 		initializeProject(project)
 
 		fmt.Fprintln(cmd.OutOrStdout(), `Your Cobra application is ready at
