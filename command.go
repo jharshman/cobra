@@ -16,6 +16,7 @@
 package cobra
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
@@ -38,6 +39,9 @@ type FParseErrWhitelist flag.ParseErrorsWhitelist
 // you to define the usage and description as part of your command
 // definition to ensure usability.
 type Command struct {
+	// Toggle ask prompt.
+	Ask bool
+
 	// Use is the one-line usage message.
 	Use string
 
@@ -792,6 +796,15 @@ func (c *Command) execute(a []string) (err error) {
 
 	if !c.Runnable() {
 		return ErrSubCommandRequired
+	}
+
+	// check ask toggle
+	if c.Ask {
+		c.Println("continue? [Y/n]")
+		if !ask() {
+			c.Println("canceled...")
+			return errors.New("command canceled")
+		}
 	}
 
 	c.preRun()
@@ -1604,4 +1617,25 @@ func (c *Command) updateParentsPflags() {
 	c.VisitParents(func(parent *Command) {
 		c.parentsPflags.AddFlagSet(parent.PersistentFlags())
 	})
+}
+
+func ask() bool {
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		s, _ := reader.ReadString('\n')
+		s = strings.TrimSuffix(s, "\n")
+		s = strings.ToLower(s)
+		if len(s) > 1 {
+			fmt.Fprintln(os.Stderr, "Please enter Y or N")
+			continue
+		}
+		if strings.Compare(s, "n") == 0 {
+			return false
+		} else if strings.Compare(s, "y") == 0 {
+			break
+		} else {
+			continue
+		}
+	}
+	return true
 }
